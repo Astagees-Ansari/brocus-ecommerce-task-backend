@@ -18,3 +18,22 @@ export const purchase = async (req, res) => {
 
   res.json(order);
 };
+
+export const getOrders = async (req, res) => {
+  try {
+    const orders = await prisma.order.findMany({
+      where: {
+        userId: req.user.id
+      },
+      include: {
+        product: true
+      }
+    });
+
+    res.json(orders);
+
+  } catch (error) {
+    console.log("ERROR:", error); // 👈 ADD THIS
+    res.status(500).json({ message: "Error fetching orders" });
+  }
+};
